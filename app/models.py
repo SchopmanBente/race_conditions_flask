@@ -89,8 +89,11 @@ class RaceConditionExampleThree(object):
 class DirFolderName(object):
     """docstring for."""
 
-    def __init__(self):
-        self.uploads_path = dirname(realpath(__file__)) + ''
+    def __init__(self,name):
+        ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+        os = os.path
+        uploads = os + ROOT_DIR + dirname(realpath(__file__)) + 'app/static/logs/'
+        self.uploads_path = uploads
 
     def get_uploads_path(self):
         return self.uploads_path
