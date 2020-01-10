@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template, make_response, send_from_directory, Response
 from flask_bootstrap import Bootstrap
-
+import logging
 from .models import  DirFolderName, RaceConditionExampleOne, RaceConditionExampleTwo, RaceConditionExampleThree
 from os import path
 from os.path import dirname, realpath, join
@@ -16,6 +16,7 @@ def index():
 
 @app.route('/race_conditions_example_one')
 def example_one():
+    logging.warning("boe!")
     log = RaceConditionExampleOne()
     logger = log.run_example();
     try:
@@ -32,6 +33,7 @@ def example_one():
 
 @app.route('/race_conditions_example_two')
 def example_two():
+
     log = RaceConditionExampleOne()
     logger = log.run_example();
     try:

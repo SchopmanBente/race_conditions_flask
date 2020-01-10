@@ -44,7 +44,7 @@ class RaceConditionExampleOne(object):
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
             for index in range(2):
                 executor.submit(database.update, index)
-                logger.error("value:",index)
+                logger.error("value:",  index)
         logger.error("Testing update. Ending value is %d.", self.database.value)
 
 
