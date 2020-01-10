@@ -3,8 +3,10 @@ import os.path
 import logging
 import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor
-from flask import Flask
+from flask import Flask, Response
 import logging
+import time
+from time import sleep
 from flask_bootstrap import Bootstrap
 
 class FakeDatabase:
@@ -12,12 +14,12 @@ class FakeDatabase:
         self.value = 0
 
     def update(self, name):
-        logging.info("Thread %s: starting update", name)
+        logging.info("Thread %s: starting update" % name)
         local_copy = self.value
         local_copy += 1
         time.sleep(0.1)
         self.value = local_copy
-        logging.info("Thread %s: finishing update", name)
+        logging.info("Thread %s: finishing update" % name)
 
 
 class RaceConditionExampleOne(object):
@@ -40,12 +42,12 @@ class RaceConditionExampleOne(object):
         logging.warning('This is a warning message')
         logging.error('This is an error message')
         logging.critical('This is a critical message')
-        logging.error("Testing update. Starting value is %d.", self.database.value)
+        logging.error("Testing update. Starting value is %d."% self.database.value)
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
             for index in range(2):
-                executor.submit(database.update, index)
-                logger.error("value:",  index)
-        logger.error("Testing update. Ending value is %d.", self.database.value)
+                executor.submit(database.update(), index)
+
+        logger.error("Testing update. Ending value is %d."% self.database.value)
 
 
 class RaceConditionExampleTwo(object):
@@ -60,11 +62,11 @@ class RaceConditionExampleTwo(object):
         logger = logging.getLogger()
         logging.basicConfig(filename=filename, level=logging.INFO)
         database = self.database
-        logging.info("Testing update. Starting value is %d.", self.database.value)
+        logging.info("Testing update. Starting value is %d."% self.database.value)
         with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
             for index in range(2):
-                executor.submit(self.database.update, index)
-        logging.info("Testing update. Ending value is %d.", self.database.value)
+                executor.submit(self.database.update(), index)
+        logging.info("Testing update. Ending value is %d."% self.database.value)
 
 
 
@@ -73,12 +75,12 @@ class FakeDatabaseTwo:
         self.value = 0
 
     def update(self, name):
-        logging.error("Thread %s: starting update", name)
+        logging.error("Thread %s: starting update" % name)
         local_copy = self.value
         local_copy += 1
         time.sleep(0.1)
         self.value = local_copy
-        logging.error("Thread %s: finishing update", name)
+        logging.error("Thread %s: finishing update" % name)
 
 
 class RaceConditionExampleThree(object):
@@ -92,11 +94,11 @@ class RaceConditionExampleThree(object):
         logger = logging.getLogger()
         logging.basicConfig(filename=filename, level=logging.INFO)
         database = self.database
-        logging.info("Testing update. Starting value is %d.", self.database.value)
+        logging.info("Testing update. Starting value is %d." % self.database.value)
         with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
             for index in range(2):
-                executor.submit(self.database.update, index)
-        logging.info("Testing update. Ending value is %d.", self.database.value)
+                executor.submit(self.database.update('doesnotworkrightnow'), index)
+        logging.info("Testing update. Ending value is %d." % self.database.value)
 
 class DirFolderName(object):
     """docstring for."""
@@ -109,3 +111,7 @@ class DirFolderName(object):
 
     def get_uploads_path(self):
         return self.uploads_path
+
+
+class MyResponse(Response):
+    pass

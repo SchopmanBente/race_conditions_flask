@@ -1,13 +1,12 @@
-from flask import Flask, make_response, send_file
-from flask.ext.bootstrap import Bootstrap
+from flask import Flask, make_response, send_file, Response
+from flask_bootstrap import Bootstrap
+from app.models import MyResponse
 
 
 app = Flask(__name__, template_folder='../templates')
+app.response_class = MyResponse
+
 app.debug = True
-app.config["LOGS"] = "logs"
-app.config['UPLOAD_FOLDER'] = dirname(realpath(__file__)) + 'static/logs'
 
-
-from app import routes
 
 bootstrap = Bootstrap(app)

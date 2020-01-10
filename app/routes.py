@@ -19,6 +19,7 @@ def example_one():
     logging.warning("boe!")
     log = RaceConditionExampleOne()
     logger = log.run_example();
+    print(logger)
     try:
        filename = "example_one.log"
        uploads_class = DirFolderName(filename)
