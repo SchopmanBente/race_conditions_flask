@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, make_response, send_from_directory, Response
+from flask import render_template, make_response, send_file, Response
 from flask_bootstrap import Bootstrap
 import logging
 from .models import  DirFolderName, RaceConditionExampleOne, RaceConditionExampleTwo, RaceConditionExampleThree
@@ -21,14 +21,10 @@ def example_one():
     logger = log.run_example();
     print(logger)
     try:
-       filename = "example_one.log"
-       uploads_class = DirFolderName(filename)
-       uploads = uploads_class.get_uploads_path
-       return Response(
-            logger,
-            mimetype="text/log",
-            headers={"Content-disposition":
-                     "attachment; filename=example_one.log"})
+        filename = "example_one.log"
+        uploads_class = DirFolderName(filename)
+        uploads = uploads_class.get_uploads_path
+        return send_file(uploads,as_attachment=True, attachment_filename=filename)
     except FileNotFoundError as fnf_error:
        print(fnf_error)
 
