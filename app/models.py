@@ -39,11 +39,6 @@ class RaceConditionExampleOne(object):
         log = logger_new.function_logger()
         database = self.database
 
-        log.debug('This is a debug message')
-        log.info('This is an info message')
-        log.warning('This is a warning message')
-        log.error('This is an error message')
-        log.critical('This is a critical message')
         log.error("Testing update. Starting value is %d." % self.database.value)
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
             for index in range(2):
@@ -64,19 +59,14 @@ class RaceConditionExampleTwo(object):
 
         logger_new = Logger(console_level=logging.INFO,log_file=filename,function_name="example_two",file_level=logging.INFO);
         log = logger_new.function_logger()
-        logging.basicConfig(filename=filename,
-                            filemode='a',
-                            format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
-                            datefmt='%H:%M:%S',
-                            level=logging.INFO)
         database = self.database
-        log.info("Testing update. Starting value is %d."% database.value)
+        log.info("Testing update. Starting value is {0}".format(database.value))
         with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
             for index in range(2):
                 name = str(index)
                 executor.submit(database.update(name=name), index)
-                log.info(msg="The value  {%s} from this thread is {%d} " % name & index)
-        log.info("Testing update. Ending value is %d."% database.value)
+                log.info(msg="The value  {0} from this thread is {1} ".format(name,index))
+        log.info("Testing update. Ending value is {0}.".format(database.value))
 
 
 
@@ -147,7 +137,7 @@ class Logger(object):
         LOG_FILE = self.log_file
 
         # Add the log message handler to the logger
-        handler = logging.handlers.RotatingFileHandler(LOG_FILE , maxBytes = 5000, backupCount = 5)
+        handler = logging.handlers.RotatingFileHandler(LOG_FILE , maxBytes = 10000, backupCount = 2)
 
         my_logger.addHandler(handler)
         #handler = FileHandler(self.log_file,level=logging.INFO)
