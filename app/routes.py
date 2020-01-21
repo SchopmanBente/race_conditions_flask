@@ -1,12 +1,10 @@
-from app import app
-from flask import render_template, make_response, send_file, Response
-from flask_bootstrap import Bootstrap
-import logging
-from .models import  DirFolderName, RaceConditionExampleOne, RaceConditionExampleTwo, RaceConditionExampleThree, MyResponse
-from os import path
-from os.path import dirname, realpath, join
+import os
+from flask import Flask, request, redirect, url_for, render_template, send_file
+from werkzeug.utils import secure_filename
 
-from pathlib import Path
+from app import app
+from .models import DirFolderName, RaceConditionExampleOne, RaceConditionExampleThree
+
 
 # this is a comment to get GitHub working again
 @app.route('/')
@@ -20,15 +18,11 @@ def example_one():
     logger = log.run_example();
 
     try:
-        filename = "example_one.log"
-        uploads_class = DirFolderName(filename)
-        uploads = uploads_class.get_uploads_path
-        #return Response(
-           # logger,
-         #   mimetype="text/log",
-          #  headers={"Content-disposition":
-            #             "attachment; filename=example_one.log"})
-        return send_file(uploads,as_attachment=True, attachment_filename=filename)
+        file_name = "example_one.log"
+        filename = secure_filename(file.file_name)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return redirect(url_for('/race_conditions_example_one'))
+       # return send_from_directory(uploads, file_name, as_attachment=True)
     except FileNotFoundError as fnf_error:
        print(fnf_error)
 
@@ -38,14 +32,11 @@ def example_two():
     log = RaceConditionExampleOne()
     logger = log.run_example();
     try:
-       filename = "example_two.log"
-       uploads_class = DirFolderName(filename)
-       uploads = uploads_class.get_uploads_path
-       return Response(
-           logger,
-           mimetype="text/log",
-           headers={"Content-disposition":
-                        "attachment; filename=example_two.log"})
+       file_name = "example_two.log"
+
+       filename = secure_filename(file.file_name)
+       file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+       return redirect(url_for('/race_conditions_example_one'))
     except FileNotFoundError as fnf_error:
        print(fnf_error)
 
@@ -54,30 +45,19 @@ def example_three():
     log = RaceConditionExampleThree()
     logger = log.run_example();
     try:
-       filename = "example_three.log"
-       uploads_class = DirFolderName(filename)
-       uploads = uploads_class.get_uploads_path
-       return Response(
-           logger,
-           mimetype="text/log",
-           headers={"Content-disposition":
-                        "attachment; filename=example_three.log"})
+       file_name = "example_three.log"
+       return send_file('/home/bente/Documents/inholland/1920-4.2-security/workshops-securify/flask_race_conditions/app/static/logs/example_three.log', attachment_filename=file_name)
+     #  filename = secure_filename(file.file_name)
+       #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+ #      return redirect(url_for('/race_conditions_example_one'))
     except FileNotFoundError as fnf_error:
        print(fnf_error)
 
 
-@app.route("/getPlotCSV")
-def getPlotCSV():
-    log = RaceConditionExampleThree()
-    logger = log.run_example();
+@app.route('/return-files/')
+def return_files_tut():
     try:
-        filename = "example_three.log"
-        uploads_class = DirFolderName(filename)
-        uploads = uploads_class.get_uploads_path
-        return Response(
-            logger,
-            mimetype="text/log",
-            headers={"Content-disposition":
-                         "attachment; filename=example_three.log"})
+        print("Ga es werken ofzo")
+        return send_file('/home/bente/Documents/inholland/1920-4.2-security/workshops-securify/flask_race_conditions/app/static/images/gedragsveranderingsmodel.png',attachment_filename='gedragsveranderingsmodel.png')
     except FileNotFoundError as fnf_error:
         print(fnf_error)

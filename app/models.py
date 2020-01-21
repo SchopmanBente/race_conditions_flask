@@ -21,7 +21,7 @@ class FakeDatabase:
         local_copy += 1
         time.sleep(0.1)
         self.value = local_copy
-        self.log.info("The value is: {1}".format(self.value))
+        self.log.info("Thread {0} has this value {1}".format(name, self.value))
         self.log.info("Thread {0] is finishing update".format(name))
 
 
@@ -39,12 +39,12 @@ class RaceConditionExampleOne(object):
         log = logger_new.function_logger()
         database = self.database
 
-        log.error("Testing update. Starting value is %d." % self.database.value)
+        log.error("Testing update. Starting value is {0}".format(database.value))
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
             for index in range(2):
                 name =  str(index)
                 executor.submit(database.update(name=name), index)
-        log.error("Testing update. Ending value is %d." % self.database.value)
+        log.error("Testing update. Ending value is {9}.".format(database.value))
 
 
 class RaceConditionExampleTwo(object):
@@ -83,7 +83,7 @@ class FakeDatabaseTwo:
         local_copy += 1
         time.sleep(0.1)
         self.value = local_copy
-        self.log.info("Thread {0} has this value {1}".format(name,self.value))
+        self.log.info("Thread {0} has this value {1}".format(name, self.value))
         self.log.error("Thread {0}: finishing update".format(name))
 
 
@@ -112,7 +112,7 @@ class DirFolderName(object):
     def __init__(self,name):
         ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
         print(ROOT_DIR)
-        uploads = str((os.path,ROOT_DIR,os.path.dirname(os.path.realpath(__file__)) ,name))
+
         self.uploads_path = uploads
         print(uploads)
 
@@ -130,23 +130,23 @@ class Logger(object):
         self.file_level = file_level
 
     def function_logger(self):
+        # set up logging to file - see previous section for more details
+        logging.basicConfig(level=logging.DEBUG,
+                            format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+                            datefmt='%m-%d %H:%M',
+                            filename=self.log_file,
+                            filemode='w')
+        # define a Handler which writes INFO messages or higher to the sys.stderr
+        console = logging.StreamHandler()
+        console.setLevel(logging.INFO)
+        # set a format which is simpler for console use
+        formatter = logging.Formatter('%(name)-12s: %(levelname)-8s %(message)s')
+        # tell the handler to use this format
+        console.setFormatter(formatter)
+        # add the handler to the root logger
+        logging.getLogger('').addHandler(console)
 
-        # Set up a specific logger with our desired output level
-        my_logger = logging.getLogger('MyLogger')
-        my_logger.setLevel(logging.INFO)
-        LOG_FILE = self.log_file
-
-        # Add the log message handler to the logger
-        handler = logging.handlers.RotatingFileHandler(LOG_FILE , maxBytes = 10000, backupCount = 2)
-
-        my_logger.addHandler(handler)
-        #handler = FileHandler(self.log_file,level=logging.INFO)
-        #handler.setLevel(logging.INFO)
-        #fh_format = logging.Formatter('%(asctime)s - %(lineno)d - %(levelname)-8s - %(message)s')
-        #handler.setFormatter(fh_format)
-        #log.addHandler(handler)
-
-        return my_logger
+        return logging
 
 
 class MyResponse(Response):
