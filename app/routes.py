@@ -54,16 +54,16 @@ def example_three():
     log = RaceConditionExampleThree()
     logger = log.run_example();
     try:
-       filename = "example_three.log"
-       uploads_class = DirFolderName(filename)
-       uploads = uploads_class.get_uploads_path
-       return Response(
-           logger,
-           mimetype="text/log",
-           headers={"Content-disposition":
-                        "attachment; filename=example_three.log"})
+        filename = "example_three.log"
+        uploads_class = DirFolderName(filename)
+        uploads = uploads_class.get_uploads_path
+        return Response(
+            logger,
+            mimetype="text/log",
+            headers={"Content-disposition":
+                         "attachment; filename=example_three.log"})
     except FileNotFoundError as fnf_error:
-       print(fnf_error)
+        print(fnf_error)
 
 
 @app.route("/getPlotCSV")

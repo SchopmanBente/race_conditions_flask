@@ -11,18 +11,18 @@ class FakeDatabase:
     def __init__(self,filename, function):
         self.value = 0
         self.logfile = filename
-        self.functionname = function
-        self.log = Logger(function_name=function,console_level=logging.INFO,file_level=logging.INFO,log_file=filename)
-        self.log.function_logger()
+        logger_new = Logger(console_level=logging.INFO, file_level=logging.INFO, log_file=filename,
+                            function_name=function);
+        self.log = logger_new.function_logger()
 
     def update(self, name):
-        self.log.info("Thread {0}: starting update".format(name))
+        self.log.error("Thread {0}: starting update".format(name))
         local_copy = self.value
         local_copy += 1
         time.sleep(0.1)
         self.value = local_copy
-        self.log.info("The value is: {1}".format(self.value))
-        self.log.info("Thread {0] is finishing update".format(name))
+        self.log.info("Thread {0} has this value {1}".format(name, self.value))
+        self.log.error("Thread {0}: finishing update".format(name))
 
 
 class RaceConditionExampleOne(object):
