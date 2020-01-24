@@ -104,6 +104,7 @@ class RaceConditionExampleThree(object):
             for index in range(3):
                 name = str(index)
                 executor.submit(database.update(name=name), index)
+                log.info("The value {0} from thread {1}".format(database.value,index))
         log.info("Testing update. Ending value is {0}.".format(database.value))
 
 class DirFolderName(object):
@@ -132,22 +133,23 @@ class Logger(object):
     def function_logger(self):
 
         # Set up a specific logger with our desired output level
-        my_logger = logging.getLogger('MyLogger')
-        my_logger.setLevel(logging.INFO)
-        LOG_FILE = self.log_file
+        #my_logger = logging.getLogger('MyLogger')
+        #handler = logging.handlers.RotatingFileHandler(LOG_FILE , maxBytes = 10000, backupCount = 2)
 
-        # Add the log message handler to the logger
-        handler = logging.handlers.RotatingFileHandler(LOG_FILE , maxBytes = 10000, backupCount = 2)
-
-        my_logger.addHandler(handler)
+        #my_logger.addHandler(handler)
         #handler = FileHandler(self.log_file,level=logging.INFO)
         #handler.setLevel(logging.INFO)
         #fh_format = logging.Formatter('%(asctime)s - %(lineno)d - %(levelname)-8s - %(message)s')
         #handler.setFormatter(fh_format)
         #log.addHandler(handler)
 
-        return my_logger
-
+       # return my_logger
+        logging.basicConfig(filename=self.log_file, level=logging.DEBUG)
+        logfile = logging.getLogger('file')
+        logconsole = logging.getLogger('console')
+        logfile.debug("Debug FILE")
+        logconsole.debug("Debug CONSOLE")
+        return  logging
 
 class MyResponse(Response):
     def __init__(self, response, **kwargs):
