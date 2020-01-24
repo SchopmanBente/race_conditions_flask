@@ -47,27 +47,6 @@ class RaceConditionExampleOne(object):
         log.error("Testing update. Ending value is %d." % self.database.value)
 
 
-class RaceConditionExampleTwo(object):
-    """This is a example where a race condition occurs with 3 threads"""
-
-    def __init__(self):
-       name = "example_two"
-       self.database = FakeDatabase(filename=name + ".log", function=name)
-
-    def run_example(self):
-        filename = "example_two.log"
-
-        logger_new = Logger(console_level=logging.INFO,log_file=filename,function_name="example_two",file_level=logging.INFO);
-        log = logger_new.function_logger()
-        database = self.database
-        log.info("Testing update. Starting value is {0}".format(database.value))
-        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-            for index in range(2):
-                name = str(index)
-                executor.submit(database.update(name=name), index)
-                log.info(msg="The value  {0} from this thread is {1} ".format(name,index))
-        log.info("Testing update. Ending value is {0}.".format(database.value))
-
 
 
 class FakeDatabaseTwo:
@@ -87,7 +66,7 @@ class FakeDatabaseTwo:
         self.log.error("Thread {0}: finishing update".format(name))
 
 
-class RaceConditionExampleThree(object):
+class RaceConditionExampleTwo(object):
     """This a example where are is a lock"""
 
     def __init__(self):
@@ -107,18 +86,6 @@ class RaceConditionExampleThree(object):
                 log.info("The value {0} from thread {1}".format(database.value,index))
         log.info("Testing update. Ending value is {0}.".format(database.value))
 
-class DirFolderName(object):
-    """docstring for."""
-
-    def __init__(self,name):
-        ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-        print(ROOT_DIR)
-        uploads = str((os.path,ROOT_DIR,os.path.dirname(os.path.realpath(__file__)) ,name))
-        self.uploads_path = uploads
-        print(uploads)
-
-    def get_uploads_path(self):
-        return self.uploads_path
 
 
 
@@ -132,23 +99,7 @@ class Logger(object):
 
     def function_logger(self):
 
-        # Set up a specific logger with our desired output level
-        #my_logger = logging.getLogger('MyLogger')
-        #handler = logging.handlers.RotatingFileHandler(LOG_FILE , maxBytes = 10000, backupCount = 2)
-
-        #my_logger.addHandler(handler)
-        #handler = FileHandler(self.log_file,level=logging.INFO)
-        #handler.setLevel(logging.INFO)
-        #fh_format = logging.Formatter('%(asctime)s - %(lineno)d - %(levelname)-8s - %(message)s')
-        #handler.setFormatter(fh_format)
-        #log.addHandler(handler)
-
-       # return my_logger
         logging.basicConfig(filename=self.log_file, level=logging.DEBUG)
-        logfile = logging.getLogger('file')
-        logconsole = logging.getLogger('console')
-        logfile.debug("Debug FILE")
-        logconsole.debug("Debug CONSOLE")
         return  logging
 
 class MyResponse(Response):
