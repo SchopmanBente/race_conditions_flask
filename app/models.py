@@ -40,7 +40,7 @@ class RaceConditionExampleOne(object):
         database = self.database
 
         log.error("Testing update. Starting value is %d." % self.database.value)
-        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
             for index in range(2):
                 name =  str(index)
                 executor.submit(database.update(name=name), index)
@@ -79,7 +79,7 @@ class RaceConditionExampleTwo(object):
         log = logger_new.function_logger()
         database = self.database
         log.info("Testing update. Starting value is {0}.".format(database.value))
-        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
             for index in range(3):
                 name = str(index)
                 executor.submit(database.update(name=name), index)
