@@ -21,7 +21,7 @@ def example_one():
 
     try:
         filename = "example_one.log"
-        path = 'app/static/logs/example_one.log'
+        path = '/home/bente/Documents/inholland/1920-4.2-security/workshops-securify/flask_race_conditions/app/static/logs/example_one.log'
         uploads_class = DirFolderName(filename)
         uploads = uploads_class.get_uploads_path
         return send_file(path, attachment_filename=filename)
@@ -34,7 +34,7 @@ def example_two():
     csv = log.run_example();
     try:
         filename = "example_two.log"
-        path = 'app/static/logs/example_two.log'
+        path = '/home/bente/Documents/inholland/1920-4.2-security/workshops-securify/flask_race_conditions/app/static/logs/example_two.log'
         uploads_class = DirFolderName(filename)
         uploads = uploads_class.get_uploads_path
         return send_file(path,attachment_filename=filename)
