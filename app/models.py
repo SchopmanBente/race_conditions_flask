@@ -50,7 +50,7 @@ class RaceConditionExampleOne(object):
 
 
 class FakeDatabaseTwo:
-    def __init__(self, function_name, filename=None):
+    def __init__(self):
         self.value = 0
         logger = Logger();
         self.log = logger
@@ -72,18 +72,18 @@ class RaceConditionExampleTwo(object):
     def __init__(self):
         name = "example"
         self.database  = FakeDatabaseTwo(function_name=name, filename=name +".log")
-        self.logger = Logger();
+        self.log = Logger();
 
     def run_example(self):
         filename = "example.log"
         database = self.database
-        self.logger.info("Testing update. The starting value is %d.".format(database.value))
+        self.log.info("Testing update. Starting value is %d." % self.database.value)
         with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
             for index in range(3):
                 name = str(index)
                 executor.submit(database.update(name=name), index)
-                self.logger.info("The value %d from thread %d",format(database.value,index))
-        self.logger.info("Testing update. The ending value is %d.".format(database.value))
+                self.log.info("The value {0} from thread {1}".format(database.value, index))
+        self.log.info("Testing update. Ending value is %d." % self.database.value)
 
 
 
@@ -92,26 +92,19 @@ class Logger(object):
 
 
   def __init__(self):
-      with open('app/config.yaml', 'r') as f:
-          config = yaml.safe_load(f.read())
-          logging.config.dictConfig(config)
+      logging.basicConfig(filename='example.log',
+                          filemode='a',
+                          format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                          datefmt='%H:%M:%S',
+                          level=logging.INFO)
 
-      logger = logging.getLogger('logger')
-      logger.info("Is working for you now")
-      self.logger = logger
+
+      self.logger = logging.getLogger('race-conditions')
 
   def info(self,message):
      self.logger.info(message)
 
-class LogSwitcher(object):
-    def __init__(self,logger,level):
-        self.logger = logger
-        self.log_level = level
 
-    def log(log_level,message):
-        return {
-            logging.INFO: self.logger.info(message)
-        }.get(log_level, self.logger.debug(message))
 
 class MyResponse(Response):
     def __init__(self, response, **kwargs):
