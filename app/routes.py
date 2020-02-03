@@ -18,38 +18,28 @@ def index():
 def example_one():
     log = RaceConditionExampleOne()
     csv = log.run_example();
-
+    print(csv)
     try:
-        filename = "example_one.log"
-        path = '/home/bente/Documents/inholland/1920-4.2-security/workshops-securify/flask_race_conditions/app/static/logs/example_one.log'
-        return send_from_directory(path, filename, as_attachment=False)
+        return Response(
+            csv,
+            mimetype="text/log",
+            headers={"Content-disposition":
+                         "attachment; filename=example.log"})
     except FileNotFoundError as fnf_error:
         print(fnf_error)
 
-@app.route('/example_two')
+@app.route('/race_conditions_example_two')
 def example_two():
     log = RaceConditionExampleTwo()
     csv = log.run_example();
+    print(csv)
     try:
-        filename = "example_two.log"
-        path = '/home/bente/Documents/inholland/1920-4.2-security/workshops-securify/flask_race_conditions/app/static/logs/example_two.log'
-        #return send_file(path,attachment_filename=filename)
-        return send_from_directory(path,filename,as_attachment=False)
-       # return send_file(path, attachment_filename=filename)
-    except FileNotFoundError as fnf_error:
-        print(fnf_error)
+        return Response(
+            csv,
+            mimetype="text/log",
+            headers={"Content-disposition":
+                         "attachment; filename=example.log"})
 
-
-@app.route('/hi')
-def hello_world():
-    log = RaceConditionExampleTwo()
-    csv = log.run_example();
-    try:
-        filename = "raw_data.txt"
-        path = 'app/static/logs/raw_data.txt'
-        #return send_file(path,attachment_filename=filename)
-        return send_from_directory(path, filename, as_attachment=True)
-    # return send_file(path, attachment_filename=filename)
     except FileNotFoundError as fnf_error:
         print(fnf_error)
 
@@ -58,3 +48,15 @@ def hello_world():
 def page_not_found(e):
     # note that we set the 404 status explicitly
     return render_template('404.html'), 404
+
+
+@app.route("/getPlotCSV")
+def getPlotCSV():
+    # with open("outputs/Adjacency.csv") as fp:
+    #     csv = fp.read()
+    csv = '1,2,3\n4,5,6\n'
+    return Response(
+        csv,
+        mimetype="text/csv",
+        headers={"Content-disposition":
+                 "attachment; filename=myplot.csv"})

@@ -1,7 +1,8 @@
 from flask import Flask, make_response, send_file, Response, render_template
 from flask_bootstrap import Bootstrap
 from app.models import MyResponse
-
+import yaml
+import pathlib
 
 
 def page_not_found(e):
@@ -17,6 +18,15 @@ def create_app(config_filename):
     bootstrap = Bootstrap(app)
     return bootstrap
 
+def create_config(self):
+    my_path = Path(__file__).resolve()  # resolve to get rid of any symlinks
+    config_path = my_path.parent / 'config.yaml'
+
+    with config_path.open() as config_file:
+        config = yaml.safe_load(config_file)
+    app.config["YAML_CONFIG_LOGGING"] = config
+    
 __name__ == "__main__":
  app = create_app(None)
+ create_config()
  app.run()
