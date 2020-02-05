@@ -9,10 +9,10 @@ import yaml
 
 
 class FakeDatabase:
-    def __init__(self,filename, function):
+    def __init__(self,filename):
         self.value = 0
         self.logfile = filename
-        self.log = Logger()
+        self.log = Logger(filename)
 
     def update(self, name):
         self.log.info("Thread {0}: starting update".format(name))
@@ -29,8 +29,8 @@ class RaceConditionExampleOne(object):
 
     def __init__(self):
         filename = "example.log"
-        self.database = FakeDatabase(filename=filename,function="example_one")
-        logger = Logger();
+        self.database = FakeDatabase(filename=filename)
+        logger = Logger(filename=filename);
         self.log = logger
     def run_example(self):
         name = "example.log"
@@ -50,9 +50,9 @@ class RaceConditionExampleOne(object):
 
 
 class FakeDatabaseTwo:
-    def __init__(self):
+    def __init__(self,filename):
         self.value = 0
-        logger = Logger();
+        logger = Logger(filename=filename)
         self.log = logger
 
     def update(self, name):
@@ -69,10 +69,10 @@ class FakeDatabaseTwo:
 class RaceConditionExampleTwo(object):
     """This a example where are is a lock"""
 
-    def __init__(self):
+    def __init__(self,filename):
         name = "example"
-        self.database  = FakeDatabaseTwo(function_name=name, filename=name +".log")
-        self.log = Logger();
+        self.database  = FakeDatabaseTwo(filename=filename)
+        self.log = Logger(filename=filename);
 
     def run_example(self):
         filename = "example.log"
@@ -91,15 +91,18 @@ class RaceConditionExampleTwo(object):
 class Logger(object):
 
 
-  def __init__(self):
-      logging.basicConfig(filename='example.log',
-                          filemode='a',
-                          format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
-                          datefmt='%H:%M:%S',
-                          level=logging.INFO)
+  def __init__(self,filename):
+      with open('app/config.yaml', 'r') as f:
+          log_cfg = yaml.safe_load(f.read())
+
+      logging.config.dictConfig(log_cfg)
+      self.logger = logging.getLogger('dev')
+      self.logger.setLevel(logging.INFO)
+
+      self.logger.info('This is an info message')
+      self.logger.error('This is an error message')
 
 
-      self.logger = logging.getLogger('race-conditions')
 
   def info(self,message):
      self.logger.info(message)

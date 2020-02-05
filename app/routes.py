@@ -18,27 +18,31 @@ def index():
 def example_one():
     log = RaceConditionExampleOne()
     csv = log.run_example();
-    print(csv)
+    filename = "example.log"
+    path = "/home/bente/Documents/inholland/1920-4.2-security/workshops-securify/flask_race_conditions/example.log"
     try:
         return Response(
             csv,
-            mimetype="text/log",
+            mimetype="text/csv",
             headers={"Content-disposition":
                          "attachment; filename=example.log"})
+
     except FileNotFoundError as fnf_error:
         print(fnf_error)
 
 @app.route('/race_conditions_example_two')
 def example_two():
-    log = RaceConditionExampleTwo()
+    filename = "example.log"
+    log = RaceConditionExampleTwo(filename=filename)
     csv = log.run_example();
-    print(csv)
+
+    path = "/home/bente/Documents/inholland/1920-4.2-security/workshops-securify/flask_race_conditions/example.log"
     try:
-        return Response(
-            csv,
-            mimetype="text/log",
-            headers={"Content-disposition":
-                         "attachment; filename=example.log"})
+            return Response(
+                csv,
+                mimetype="text/csv",
+                headers={"Content-disposition":
+                             "attachment; filename=example.log"})
 
     except FileNotFoundError as fnf_error:
         print(fnf_error)
