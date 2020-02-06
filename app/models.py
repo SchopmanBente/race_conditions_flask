@@ -96,11 +96,9 @@ class Logger(object):
           log_cfg = yaml.safe_load(f.read())
 
       logging.config.dictConfig(log_cfg)
-      self.logger = logging.getLogger('dev')
+      self.logger = logging.getLogger('RACE-CONDITIONS')
       self.logger.setLevel(logging.INFO)
 
-      self.logger.info('This is an info message')
-      self.logger.error('This is an error message')
 
 
 
