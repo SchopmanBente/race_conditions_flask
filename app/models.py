@@ -3,7 +3,7 @@ import logging
 import logging.handlers
 import logging.config
 from flask import Response
-import concurrent
+import concurrent.futures
 import time
 import yaml
 
@@ -82,7 +82,7 @@ class RaceConditionExampleTwo(object):
             for index in range(3):
                 name = str(index)
                 executor.submit(database.update(name=name), index)
-                self.log.info("The value {0} from thread {1}".format(database.value, index))
+                self.log.info("The value {0} from thread {1}".format(str(database.value), index))
         self.log.info("Testing update. Ending value is %d." % self.database.value)
 
 
