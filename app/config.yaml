@@ -15,7 +15,7 @@ handlers:
   file_handler:
     class: logging.FileHandler
     level: INFO
-    filename: example.log
+    filename: 'example.log'
     formatter: extended
 
 loggers:

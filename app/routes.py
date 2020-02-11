@@ -21,12 +21,7 @@ def example_one():
     filename = "example.log"
     path = "/home/bente/Documents/inholland/1920-4.2-security/workshops-securify/flask_race_conditions/example.log"
     try:
-        return Response(
-            csv,
-            mimetype="text/csv",
-            headers={"Content-disposition":
-                         "attachment; filename=example.log"})
-
+        return render_template('index.html')
     except FileNotFoundError as fnf_error:
         print(fnf_error)
 
@@ -38,11 +33,7 @@ def example_two():
 
     path = "/home/bente/Documents/inholland/1920-4.2-security/workshops-securify/flask_race_conditions/example.log"
     try:
-            return Response(
-                csv,
-                mimetype="text/csv",
-                headers={"Content-disposition":
-                             "attachment; filename=example.log"})
+            return  render_template('index.html')
 
     except FileNotFoundError as fnf_error:
         print(fnf_error)

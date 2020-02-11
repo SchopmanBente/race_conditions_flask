@@ -12,7 +12,7 @@ class FakeDatabase:
     def __init__(self,filename):
         self.value = 0
         self.logfile = filename
-        self.log = Logger(filename)
+        self.log = Logger()
 
     def update(self, name):
         self.log.info("Thread {0}: starting update".format(name))
@@ -32,6 +32,7 @@ class RaceConditionExampleOne(object):
         self.database = FakeDatabase(filename=filename)
         logger = Logger(filename=filename);
         self.log = logger
+        self.log.info("I also love my grandfather and brother and sister!")
     def run_example(self):
         name = "example.log"
 
@@ -52,9 +53,9 @@ class RaceConditionExampleOne(object):
 class FakeDatabaseTwo:
     def __init__(self,filename):
         self.value = 0
-        logger = Logger(filename=filename)
+        logger = Logger()
         self.log = logger
-
+        self.log.info("I also love my grandfather and brother and sister!")
     def update(self, name):
 
         self.log.info("Thread {0}: starting update".format(name))
@@ -72,7 +73,8 @@ class RaceConditionExampleTwo(object):
     def __init__(self,filename):
         name = "example"
         self.database  = FakeDatabaseTwo(filename=filename)
-        self.log = Logger(filename=filename);
+        self.log = Logger()
+        self.log.info("I love my mother Tilly de Waard")
 
     def run_example(self):
         filename = "example.log"
@@ -91,7 +93,7 @@ class RaceConditionExampleTwo(object):
 class Logger(object):
 
 
-  def __init__(self,filename):
+  def __init__(self):
       with open('app/config.yaml', 'r') as f:
           log_cfg = yaml.safe_load(f.read())
 
@@ -99,7 +101,7 @@ class Logger(object):
       self.logger = logging.getLogger('RACE-CONDITIONS')
       self.logger.setLevel(logging.INFO)
 
-
+      self.logger.info("I love Bart Admiraal for ever")
 
 
   def info(self,message):
