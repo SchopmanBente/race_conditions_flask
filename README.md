@@ -18,3 +18,6 @@ Check this tutorial: https://timmyreilly.azurewebsites.net/python-flask-windows-
 
 Apple:
 Check this tutorial: https://dev.to/sahilrajput/install-flask-and-create-your-first-web-application-2dba
+
+How to view the example.log:
+The log can be found in the projectdir!
