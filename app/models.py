@@ -9,12 +9,14 @@ import yaml
 
 
 class FakeDatabase:
-    def __init__(self,filename):
+    def __init__(self):
         self.value = 0
-        self.logfile = filename
         self.log = Logger()
+        self.log.info("Working with FakeDatabase")
 
     def update(self, name):
+        self.log.info("Working with FakeDatabase")
+        self.log.info("FakeDatabase is giving info right now")
         self.log.info("Thread {0}: starting update".format(name))
         local_copy = self.value
         local_copy += 1
@@ -29,15 +31,15 @@ class RaceConditionExampleOne(object):
 
     def __init__(self):
         filename = "example.log"
-        self.database = FakeDatabase(filename=filename)
-        logger = Logger(filename=filename);
+        self.database = FakeDatabase()
+        logger = Logger()
         self.log = logger
-        self.log.info("I also love my grandfather and brother and sister!")
+
     def run_example(self):
         name = "example.log"
 
         database = self.database
-
+        self.log.info("Working with FakeDatabase")
         self.log.info("Testing update. Starting value is %d." % self.database.value)
         with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
             for index in range(2):
@@ -51,13 +53,14 @@ class RaceConditionExampleOne(object):
 
 
 class FakeDatabaseTwo:
-    def __init__(self,filename):
+    def __init__(self):
         self.value = 0
         logger = Logger()
         self.log = logger
-        self.log.info("I also love my grandfather and brother and sister!")
-    def update(self, name):
+        self.log.info("Working with FakeDatabaseTwo")
 
+    def update(self, name):
+        self.log.info("FakeDatabaseTWo is giving info right now")
         self.log.info("Thread {0}: starting update".format(name))
         local_copy = self.value
         local_copy += 1
@@ -72,12 +75,12 @@ class RaceConditionExampleTwo(object):
 
     def __init__(self,filename):
         name = "example"
-        self.database  = FakeDatabaseTwo(filename=filename)
+        self.database  = FakeDatabaseTwo()
         self.log = Logger()
-        self.log.info("I love my mother Tilly de Waard")
+        self.log.info("Working with FakeDatabaseTwo")
 
     def run_example(self):
-        filename = "example.log"
+        self.log.info("Working with FakeDatabaseTwo")
         database = self.database
         self.log.info("Testing update. Starting value is %d." % self.database.value)
         with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
@@ -94,18 +97,15 @@ class Logger(object):
 
 
   def __init__(self):
-      with open('app/config.yaml', 'r') as f:
-          log_cfg = yaml.safe_load(f.read())
-
-      logging.config.dictConfig(log_cfg)
+      self.logger = logging.basicConfig(filename='example.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
       self.logger = logging.getLogger('RACE-CONDITIONS')
       self.logger.setLevel(logging.INFO)
 
-      self.logger.info("I love Bart Admiraal for ever")
+
 
 
   def info(self,message):
-     self.logger.info(message)
+      self.logger.info(message)
 
 
 
