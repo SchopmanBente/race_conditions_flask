@@ -9,7 +9,7 @@ get==2019.4.13
 html5lib==0.999999999
 itsdangerous==1.1.0
 Jinja2==2.10.3
-lxml==4.2.1
+lxml==4.6.3
 MarkupSafe==1.1.1
 numpy==1.13.3
 pep8==1.7.1
